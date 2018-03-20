@@ -23,9 +23,9 @@ x2d.convert();
 ```
     
 ## Changelog
-### 1.0a - await finishing to lounch
+### 1.0a - await finishing to launch
      
     
 #### TODO
-    - fix ddl generation bug
+    - fix date types interpred as double
     - Use streams (Prepare to huge sheets)

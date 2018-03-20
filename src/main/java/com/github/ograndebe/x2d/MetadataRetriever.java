@@ -47,7 +47,9 @@ public class MetadataRetriever {
             final Row row = sheet.getRow(i);
             final Cell cell = row.getCell(columnIndex);
 
-            if (!cell.getCellTypeEnum().equals(type) ) {
+            if (type == null) {
+                type = cell.getCellTypeEnum();
+            } else if (!cell.getCellTypeEnum().equals(type) ) {
                 try {
                     final String scv = cell.getStringCellValue();
                     type = CellType.STRING;
@@ -63,7 +65,7 @@ public class MetadataRetriever {
                         break;
                     case NUMERIC:
                         type = CellType.NUMERIC;
-                        length = Math.max(length,0);
+                        length = Math.max(length,String.valueOf(cell.getNumericCellValue()).length());
                         break;
                     case BOOLEAN:
                         type = CellType.BOOLEAN;
@@ -84,9 +86,8 @@ public class MetadataRetriever {
                             if (scv != null) length = Math.max(scv.length(), length);
                         } catch (Exception e) {
                             try {
-                                cell.getNumericCellValue();
+                                length = Math.max(length,String.valueOf(cell.getNumericCellValue()).length());
                                 type = CellType.NUMERIC;
-                                length = Math.max(length,0);
                             } catch (Exception e2) {
                                 type = CellType.ERROR;
                                 length = Math.max(length,5);
@@ -112,13 +113,13 @@ public class MetadataRetriever {
 
     private String tableName(final Sheet sheet) {
         if (sheet == null) throw new IllegalArgumentException("Sheet must be not null");
-        return sheet.getSheetName().replace(" ","_").toUpperCase();
+        return sheet.getSheetName().replaceAll("[^A-Za-z0-9]","_").toUpperCase();
     }
 
 
     private String columnName(final Cell cell) {
         if (cell == null) throw new IllegalArgumentException("Cell must be not null");
-        return cell.getStringCellValue().replace(" ", "_").toUpperCase();
+        return cell.getStringCellValue().replaceAll("[^A-Za-z0-9]","_").toUpperCase();
     }
 
 

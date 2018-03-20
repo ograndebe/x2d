@@ -1,6 +1,7 @@
 package com.github.ograndebe.x2d;
 
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -22,9 +23,13 @@ public class X2DTest {
         x2d.convert();
     }
 
+    @After
+    public void close() throws SQLException {
+        conn.close();
+    }
 
     @Test
-    public void testRowNumbers() throws SQLException, IOException, InvalidFormatException {
+    public void testRowNumbers() throws SQLException {
 
         int orders = countRows("select * from ORDERS");
         assertEquals(9994, orders);
@@ -63,8 +68,7 @@ public class X2DTest {
         try (PreparedStatement pstmt = conn.prepareStatement(sql)){
             try (final ResultSet rs = pstmt.executeQuery()) {
                 if(rs.next()) {
-                    final String pipedRow = getPipedRow(rs);
-                    return pipedRow;
+                    return getPipedRow(rs);
                 }
             }
         }
@@ -79,6 +83,8 @@ public class X2DTest {
         row = getFirstPipedRow("select * from RETURNS");
         assertEquals("Yes|CA-2017-153822",row);
 
+        row = getFirstPipedRow("select * from ORDERS");
+        assertEquals("1.0|CA-2016-152156|08/11/2016|11/11/2016|Second Class|CG-12520|Claire Gute|Consumer|United States|Henderson|Kentucky|42420|South|FUR-BO-10001798|Furniture|Bookcases|Bush Somerset Collection Bookcase|261,96|2|0|41,9136",row);
     }
 
 }
