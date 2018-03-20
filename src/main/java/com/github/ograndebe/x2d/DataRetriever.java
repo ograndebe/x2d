@@ -27,11 +27,18 @@ public class DataRetriever {
             final Sheet sheet = workbook.getSheetAt(i);
             if (tableName.equals(tableName(sheet))) {
                 LinkedList<List<Object>> rowsToReturn = new LinkedList<>();
+
+                final Row firstRow = sheet.getRow(sheet.getFirstRowNum());
+                int lastCell = firstRow.getLastCellNum();
+                if (firstRow.getCell(firstRow.getLastCellNum()) == null) {
+                    lastCell--;
+                }
+
                 for (int j = sheet.getFirstRowNum()+1; j <= sheet.getLastRowNum(); j++) {
                     final Row row = sheet.getRow(j);
                     LinkedList<Object> list = new LinkedList<>();
 
-                    for (int z = row.getFirstCellNum(); z <= row.getLastCellNum(); z++) {
+                    for (int z = row.getFirstCellNum(); z <= lastCell; z++) {
                         final Cell cell = row.getCell(z);
                         list.add(getValue(cell));
                     }

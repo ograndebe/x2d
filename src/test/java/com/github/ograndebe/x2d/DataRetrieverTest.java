@@ -24,6 +24,11 @@ public class DataRetrieverTest {
 
         assertNotNull(data);
         assertEquals(4,data.size());
+
+        for (List<Object> row : data) {
+            assertEquals(2,row.size());
+        }
+
     }
 
     @Test(expected = IllegalArgumentException.class)
